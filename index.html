@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdaptiveLearn - Personalized Study Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                        <span class="text-purple-600 font-bold text-lg">🧠</span>
+                    </div>
+                    <h1 class="text-xl font-bold">AdaptiveLearn</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <button onclick="showSection('dashboard')" class="nav-btn hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md transition-colors">Dashboard</button>
+                    <button onclick="showSection('upload')" class="nav-btn hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md transition-colors">Upload</button>
+                    <button onclick="showSection('study')" class="nav-btn hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md transition-colors">Study</button>
+                    <button onclick="showSection('analytics')" class="nav-btn hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md transition-colors">Analytics</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, Alex! 👋</h2>
+            <p class="text-gray-600">Your personalized learning journey continues</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Study Streak</p>
+                        <p class="text-2xl font-bold text-orange-600">12 days</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <span class="text-orange-600 text-xl">🔥</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Documents</p>
+                        <p class="text-2xl font-bold text-blue-600">24</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <span class="text-blue-600 text-xl">📚</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Avg Score</p>
+                        <p class="text-2xl font-bold text-green-600">87%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <span class="text-green-600 text-xl">📊</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Study Time</p>
+                        <p class="text-2xl font-bold text-purple-600">4.2h</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <span class="text-purple-600 text-xl">⏱️</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Recommendations -->
+        <div class="bg-white rounded-xl p-6 shadow-sm mb-8">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <span class="mr-2">🤖</span> AI Study Recommendations
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+                    <h4 class="font-medium text-blue-900 mb-2">Focus on Weak Areas</h4>
+                    <p class="text-sm text-blue-700 mb-3">Your performance in "Data Structures" needs attention. Spend 30 minutes reviewing linked lists.</p>
+                    <button onclick="startRecommendedStudy('data-structures')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">Start Study Session</button>
+                </div>
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
+                    <h4 class="font-medium text-green-900 mb-2">Review Schedule</h4>
+                    <p class="text-sm text-green-700 mb-3">Time to review "Machine Learning Basics" - optimal retention window detected.</p>
+                    <button onclick="startRecommendedStudy('ml-basics')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">Review Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-xl font-semibold mb-4">Recent Activity</h3>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-green-600">✓</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium">Completed quiz: "Python Fundamentals"</p>
+                        <p class="text-sm text-gray-600">Score: 92% • 2 hours ago</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600">📄</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium">Uploaded document: "Advanced Algorithms.pdf"</p>
+                        <p class="text-sm text-gray-600">Processed successfully • 5 hours ago</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span class="text-purple-600">🎯</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium">Study session: "Database Design"</p>
+                        <p class="text-sm text-gray-600">45 minutes • Yesterday</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div id="upload" class="section hidden max-w-4xl mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">Document Processing Center</h2>
+
+        <div class="bg-white rounded-xl p-8 shadow-sm mb-8">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-blue-600 text-2xl">📁</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Upload Study Materials</h3>
+                <p class="text-gray-600">Support for PDF, DOCX, TXT, and more. AI will automatically generate study content.</p>
+            </div>
+
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" class="hidden" multiple accept=".pdf,.docx,.txt,.pptx" onchange="handleFileUpload(event)">
+                <div class="space-y-2">
+                    <div class="text-4xl">📎</div>
+                    <p class="text-lg font-medium">Drop files here or click to browse</p>
+                    <p class="text-sm text-gray-500">Maximum file size: 50MB</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Queue -->
+        <div id="processingQueue" class="bg-white rounded-xl p-6 shadow-sm hidden">
+            <h3 class="text-lg font-semibold mb-4">Processing Queue</h3>
+            <div id="queueList" class="space-y-3"></div>
+        </div>
+
+        <!-- Processed Documents -->
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-lg font-semibold mb-4">Your Documents</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="documentGrid">
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="viewDocument('python-basics')">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                            <span class="text-red-600">📄</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium">Python Basics.pdf</h4>
+                            <p class="text-sm text-gray-600">24 pages • Uploaded 2 days ago</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded">Processed</span>
+                        <span class="text-gray-500">15 questions generated</span>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="viewDocument('ml-algorithms')">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span class="text-blue-600">📄</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium">ML Algorithms.docx</h4>
+                            <p class="text-sm text-gray-600">18 pages • Uploaded 1 week ago</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded">Processed</span>
+                        <span class="text-gray-500">22 questions generated</span>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="viewDocument('database-design')">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <span class="text-purple-600">📄</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium">Database Design.pdf</h4>
+                            <p class="text-sm text-gray-600">31 pages • Uploaded 3 days ago</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded">Processed</span>
+                        <span class="text-gray-500">28 questions generated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Section -->
+    <div id="study" class="section hidden max-w-4xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Study Session</h2>
+            <div class="flex items-center space-x-4">
+                <div class="bg-white px-4 py-2 rounded-lg shadow-sm">
+                    <span class="text-sm text-gray-600">Session Time: </span>
+                    <span class="font-semibold" id="sessionTimer">00:00</span>
+                </div>
+                <button onclick="endStudySession()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">End Session</button>
+            </div>
+        </div>
+
+        <!-- Study Mode Selection -->
+        <div id="studyModeSelection" class="bg-white rounded-xl p-8 shadow-sm">
+            <h3 class="text-xl font-semibold mb-6 text-center">Choose Your Study Mode</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border-2 border-gray-200 rounded-xl p-6 text-center hover:border-blue-400 cursor-pointer transition-colors" onclick="startStudyMode('quiz')">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-blue-600 text-2xl">❓</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Adaptive Quiz</h4>
+                    <p class="text-sm text-gray-600">AI-generated questions based on your weak areas</p>
+                </div>
+
+                <div class="border-2 border-gray-200 rounded-xl p-6 text-center hover:border-green-400 cursor-pointer transition-colors" onclick="startStudyMode('flashcards')">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-green-600 text-2xl">🃏</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Smart Flashcards</h4>
+                    <p class="text-sm text-gray-600">Spaced repetition system for optimal retention</p>
+                </div>
+
+                <div class="border-2 border-gray-200 rounded-xl p-6 text-center hover:border-purple-400 cursor-pointer transition-colors" onclick="startStudyMode('review')">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-purple-600 text-2xl">📖</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Document Review</h4>
+                    <p class="text-sm text-gray-600">Guided reading with key concept highlighting</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quizInterface" class="hidden">
+            <div class="bg-white rounded-xl p-8 shadow-sm mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center space-x-4">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></span>
+                        <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">Python Fundamentals</span>
+                    </div>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full progress-bar" style="width: 10%" id="quizProgress"></div>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4" id="questionText">What is the correct way to define a function in Python?</h3>
+                    <div class="space-y-3" id="answerOptions">
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="answer" value="a" class="mr-3">
+                            <span>function myFunction() { }</span>
+                        </label>
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="answer" value="b" class="mr-3">
+                            <span>def myFunction():</span>
+                        </label>
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="answer" value="c" class="mr-3">
+                            <span>define myFunction():</span>
+                        </label>
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="answer" value="d" class="mr-3">
+                            <span>func myFunction():</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button onclick="previousQuestion()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors" disabled>Previous</button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">Next Question</button>
+                </div>
+            </div>
+
+            <!-- Quiz Results -->
+            <div id="quizResults" class="hidden bg-white rounded-xl p-8 shadow-sm">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-green-600 text-3xl">🎉</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Quiz Complete!</h3>
+                    <p class="text-gray-600">Great job on completing the Python Fundamentals quiz</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-1">8/10</div>
+                        <div class="text-sm text-gray-600">Correct Answers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600 mb-1">80%</div>
+                        <div class="text-sm text-gray-600">Score</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-purple-600 mb-1">5:23</div>
+                        <div class="text-sm text-gray-600">Time Taken</div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <h4 class="font-semibold text-yellow-800 mb-2">Areas for Improvement</h4>
+                    <ul class="text-sm text-yellow-700 space-y-1">
+                        <li>• Review function parameters and arguments</li>
+                        <li>• Practice with lambda functions</li>
+                    </ul>
+                </div>
+
+                <div class="flex justify-center space-x-4">
+                    <button onclick="retakeQuiz()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">Retake Quiz</button>
+                    <button onclick="showSection('dashboard')" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Section -->
+    <div id="analytics" class="section hidden max-w-7xl mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">Learning Analytics</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Progress Chart -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold mb-4">Learning Progress</h3>
+                <canvas id="progressChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Performance by Subject -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold mb-4">Performance by Subject</h3>
+                <canvas id="subjectChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Detailed Analytics -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Study Patterns -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold mb-4">Study Patterns</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Best Study Time</span>
+                        <span class="font-medium">2:00 PM - 4:00 PM</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Avg Session Length</span>
+                        <span class="font-medium">45 minutes</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Most Active Day</span>
+                        <span class="font-medium">Tuesday</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Retention Rate</span>
+                        <span class="font-medium text-green-600">87%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strengths & Weaknesses -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold mb-4">Strengths & Weaknesses</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium">Python Syntax</span>
+                            <span class="text-sm text-green-600">95%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium">Data Structures</span>
+                            <span class="text-sm text-yellow-600">72%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 72%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium">Algorithms</span>
+                            <span class="text-sm text-red-600">58%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: 58%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals & Achievements -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-semibold mb-4">Goals & Achievements</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-green-600 text-sm">🏆</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">7-Day Streak</p>
+                            <p class="text-xs text-gray-600">Completed</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 text-sm">📚</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">Quiz Master</p>
+                            <p class="text-xs text-gray-600">15/20 quizzes</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                            <span class="text-purple-600 text-sm">⚡</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">Speed Learner</p>
+                            <p class="text-xs text-gray-600">In Progress</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentSection = 'dashboard';
+        let sessionStartTime = null;
+        let sessionTimer = null;
+        let currentQuizQuestion = 1;
+        let totalQuizQuestions = 10;
+        let quizAnswers = {};
+
+        // Navigation
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+
+            // Show selected section
+            document.getElementById(section).classList.remove('hidden');
+            document.getElementById(section).classList.add('fade-in');
+
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'bg-opacity-20');
+            });
+            event.target.classList.add('bg-white', 'bg-opacity-20');
+
+            currentSection = section;
+
+            // Initialize section-specific functionality
+            if (section === 'analytics') {
+                initializeCharts();
+            }
+        }
+
+        // File Upload Handling
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            const queueDiv = document.getElementById('processingQueue');
+            const queueList = document.getElementById('queueList');
+
+            if (files.length > 0) {
+                queueDiv.classList.remove('hidden');
+
+                Array.from(files).forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg';
+                    fileItem.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <span class="text-blue-600">📄</span>
+                            </div>
+                            <div>
+                                <p class="font-medium">${file.name}</p>
+                                <p class="text-sm text-gray-600">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="pulse-dot w-2 h-2 bg-blue-600 rounded-full"></div>
+                            <span class="text-sm text-blue-600">Processing...</span>
+                        </div>
+                    `;
+                    queueList.appendChild(fileItem);
+
+                    // Simulate processing
+                    setTimeout(() => {
+                        fileItem.querySelector('.pulse-dot').classList.remove('pulse-dot');
+                        fileItem.querySelector('.pulse-dot').classList.add('bg-green-600');
+                        fileItem.querySelector('span').textContent = 'Complete';
+                        fileItem.querySelector('span').className = 'text-sm text-green-600';
+
+                        // Add to document grid after processing
+                        setTimeout(() => {
+                            addDocumentToGrid(file.name);
+                            fileItem.remove();
+                            if (queueList.children.length === 0) {
+                                queueDiv.classList.add('hidden');
+                            }
+                        }, 1000);
+                    }, 2000 + (index * 1000));
+                });
+            }
+        }
+
+        function addDocumentToGrid(fileName) {
+            const grid = document.getElementById('documentGrid');
+            const docItem = document.createElement('div');
+            docItem.className = 'border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer';
+            docItem.onclick = () => viewDocument(fileName.toLowerCase().replace(/[^a-z0-9]/g, '-'));
+
+            const questionsGenerated = Math.floor(Math.random() * 20) + 10;
+            const pages = Math.floor(Math.random() * 30) + 5;
+
+            docItem.innerHTML = `
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <span class="text-green-600">📄</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium">${fileName}</h4>
+                        <p class="text-sm text-gray-600">${pages} pages • Just uploaded</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded">Processed</span>
+                    <span class="text-gray-500">${questionsGenerated} questions generated</span>
+                </div>
+            `;
+
+            grid.insertBefore(docItem, grid.firstChild);
+        }
+
+        function viewDocument(docId) {
+            alert(`Opening document viewer for: ${docId}\n\nThis would show:\n• Document content with AI highlights\n• Generated questions\n• Study recommendations\n• Progress tracking`);
+        }
+
+        // Study Session Management
+        function startRecommendedStudy(topic) {
+            showSection('study');
+            startStudyMode('quiz');
+            alert(`Starting recommended study session for: ${topic}`);
+        }
+
+        function startStudyMode(mode) {
+            document.getElementById('studyModeSelection').classList.add('hidden');
+
+            if (mode === 'quiz') {
+                document.getElementById('quizInterface').classList.remove('hidden');
+                startSessionTimer();
+            }
+
+            // Reset quiz state
+            currentQuizQuestion = 1;
+            quizAnswers = {};
+            updateQuizProgress();
+        }
+
+        function startSessionTimer() {
+            sessionStartTime = Date.now();
+            sessionTimer = setInterval(() => {
+                const elapsed = Date.now() - sessionStartTime;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('sessionTimer').textContent =
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function endStudySession() {
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+                sessionTimer = null;
+            }
+
+            document.getElementById('studyModeSelection').classList.remove('hidden');
+            document.getElementById('quizInterface').classList.add('hidden');
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('sessionTimer').textContent = '00:00';
+        }
+
+        // Quiz Management
+        function updateQuizProgress() {
+            const progress = (currentQuizQuestion / totalQuizQuestions) * 100;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+            document.getElementById('currentQuestion').textContent = currentQuizQuestion;
+            document.getElementById('totalQuestions').textContent = totalQuizQuestions;
+        }
+
+        function nextQuestion() {
+            // Save current answer
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (selectedAnswer) {
+                quizAnswers[currentQuizQuestion] = selectedAnswer.value;
+            }
+
+            if (currentQuizQuestion < totalQuizQuestions) {
+                currentQuizQuestion++;
+                updateQuizProgress();
+                loadQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuizQuestion > 1) {
+                currentQuizQuestion--;
+                updateQuizProgress();
+                loadQuestion();
+            }
+        }
+
+        function loadQuestion() {
+            // Sample questions - in a real app, these would come from the AI system
+            const questions = [{
+                text: "What is the correct way to define a function in Python?",
+                options: ["function myFunction() { }", "def myFunction():", "define myFunction():", "func myFunction():"],
+                correct: "b"
+            }, {
+                text: "Which data type is mutable in Python?",
+                options: ["String", "Tuple", "List", "Integer"],
+                correct: "c"
+            }, {
+                text: "What does the 'len()' function return?",
+                options: ["The length of an object", "The last element", "The first element", "The type of object"],
+                correct: "a"
+            }];
+
+            const questionIndex = (currentQuizQuestion - 1) % questions.length;
+            const question = questions[questionIndex];
+
+            document.getElementById('questionText').textContent = question.text;
+
+            const optionsDiv = document.getElementById('answerOptions');
+            optionsDiv.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(97 + index); // a, b, c, d
+                const label = document.createElement('label');
+                label.className = 'flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors';
+                label.innerHTML = `
+                    <input type="radio" name="answer" value="${letter}" class="mr-3">
+                    <span>${option}</span>
+                `;
+                optionsDiv.appendChild(label);
+            });
+
+            // Restore previous answer if exists
+            if (quizAnswers[currentQuizQuestion]) {
+                const radio = document.querySelector(`input[value="${quizAnswers[currentQuizQuestion]}"]`);
+                if (radio) radio.checked = true;
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quizInterface').classList.add('hidden');
+            document.getElementById('quizResults').classList.remove('hidden');
+
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+                sessionTimer = null;
+            }
+        }
+
+        function retakeQuiz() {
+            currentQuizQuestion = 1;
+            quizAnswers = {};
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('quizInterface').classList.remove('hidden');
+            updateQuizProgress();
+            loadQuestion();
+            startSessionTimer();
+        }
+
+        // Analytics Charts
+        function initializeCharts() {
+            // Progress Chart
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+            new Chart(progressCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                    datasets: [{
+                        label: 'Average Score (%)',
+                        data: [65, 72, 78, 85, 87, 89],
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Subject Performance Chart
+            const subjectCtx = document.getElementById('subjectChart').getContext('2d');
+            new Chart(subjectCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Python Syntax', 'Data Structures', 'Algorithms', 'OOP', 'Web Dev', 'Databases'],
+                    datasets: [{
+                        label: 'Performance',
+                        data: [95, 72, 58, 83, 76, 89],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        pointBackgroundColor: '#10B981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load first question
+            loadQuestion();
+
+            // Set up navigation active state
+            document.querySelector('button[onclick="showSection(\'dashboard\')"]').classList.add('bg-white', 'bg-opacity-20');
+        });
+    </script>
+    <script>
+        (function() {
+            function c() {
+                var b = a.contentDocument || a.contentWindow.document;
+                if (b) {
+                    var d = b.createElement('script');
+                    d.innerHTML = "window.__CF$cv$params={r:'97e4dbab94ab85a7',t:'MTc1NzczNzI4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                    b.getElementsByTagName('head')[0].appendChild(d)
+                }
+            }
+            if (document.body) {
+                var a = document.createElement('iframe');
+                a.height = 1;
+                a.width = 1;
+                a.style.position = 'absolute';
+                a.style.top = 0;
+                a.style.left = 0;
+                a.style.border = 'none';
+                a.style.visibility = 'hidden';
+                document.body.appendChild(a);
+                if ('loading' !== document.readyState) c();
+                else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
+                else {
+                    var e = document.onreadystatechange || function() {};
+                    document.onreadystatechange = function(b) {
+                        e(b);
+                        'loading' !== document.readyState && (document.onreadystatechange = e, c())
+                    }
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>
